@@ -26,3 +26,17 @@ new Notification(email) { IsUrgent = true, SendAt = DateTime.Today.AddHours(18) 
     .Send("customer@example.com", "Your order ships tomorrow");
 new Notification(sms) { IsUrgent = true }
     .Send("+201000000000", "OTP 4821");
+Console.WriteLine();
+
+// Every channel × every option — including the new channel (R6) — with no class per combination.
+INotificationChannel whatsapp = new WhatsAppChannel();
+var tonight = DateTime.Today.AddHours(20);
+foreach (var channel in new[] { email, sms, whatsapp })
+{
+    new Notification(channel) { IsUrgent = true }
+        .Send("student", "urgent only");
+    new Notification(channel) { SendAt = tonight }
+        .Send("student", "scheduled only");
+    new Notification(channel) { IsUrgent = true, SendAt = tonight }
+        .Send("student", "urgent + scheduled");
+}
