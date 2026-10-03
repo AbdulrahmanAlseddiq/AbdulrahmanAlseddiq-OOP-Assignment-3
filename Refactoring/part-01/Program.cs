@@ -10,7 +10,10 @@ Console.WriteLine($"Aramex 2kg → {shipping.Calculate("Aramex", 2)}");
 Console.WriteLine($"FedEx 2kg  → {shipping.Calculate("FedEx", 2)}");
 Console.WriteLine();
 
-var processor = new OrderProcessor();
+var processor = new OrderProcessor(
+    new SqlOrderRepository(),
+    new SmtpEmailSender(),
+    TimeProvider.System);
 processor.Process(1001, "customer@example.com");
 Console.WriteLine();
 
