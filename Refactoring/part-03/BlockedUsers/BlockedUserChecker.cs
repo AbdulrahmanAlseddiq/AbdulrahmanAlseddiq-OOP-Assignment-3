@@ -6,10 +6,14 @@ public static class BlockedUserChecker
 {
     public static int CountBlocked(List<int> blockedIds, int[] requestIds)
     {
+        // Build the set once — O(n). After that every lookup is O(1) on average (hashing),
+        // instead of List.Contains, which scans the whole list — O(n) per request.
+        var blockedSet = new HashSet<int>(blockedIds);
+
         var blocked = 0;
         foreach (var id in requestIds)
         {
-            if (blockedIds.Contains(id))
+            if (blockedSet.Contains(id))
                 blocked++;
         }
         return blocked;
