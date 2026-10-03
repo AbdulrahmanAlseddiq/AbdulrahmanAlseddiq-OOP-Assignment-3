@@ -1,6 +1,7 @@
 namespace Generics;
 
-public class Store<T>
+// The constraint tells the compiler: every T used here implements IHasId, so item.Id exists.
+public class Store<T> where T : IHasId
 {
     private readonly List<T> _items = new();
 
@@ -10,16 +11,13 @@ public class Store<T>
         _items.Add(item);
     }
 
-    // Step 3: this is where it breaks. The line below does NOT compile:
-    //   error CS1061: 'T' does not contain a definition for 'Id' and no accessible extension method 'Id'
-    //   accepting a first argument of type 'T' could be found
-    // It is left commented out so the project still builds — see Generics/Answers.md (Step 3).
+    // Returns default (null for classes) if not found.
     public T? GetById(int id)
     {
         foreach (var item in _items)
         {
-            // if (item.Id == id)
-            //     return item;
+            if (item.Id == id)
+                return item;
         }
         return default;
     }

@@ -1,7 +1,7 @@
 using Generics;
 
-// Step 1 — a store for students.
-var students = new StudentStore();
+// Step 4 — one generic store replaces StudentStore and CourseStore.
+var students = new Store<Student>();
 students.Add(new Student(1, "Ahmed"));
 students.Add(new Student(2, "Mona"));
 
@@ -11,8 +11,7 @@ Console.WriteLine($"Remove(1): {students.Remove(1)}");
 foreach (var s in students.GetAll())
     Console.WriteLine($"  {s}");
 
-// Step 2 — a store for courses (a copy of StudentStore with another type).
-var courses = new CourseStore();
+var courses = new Store<Course>();
 courses.Add(new Course(10, "C# Basics", 1500m));
 courses.Add(new Course(20, "OOP", 2000m));
 Console.WriteLine($"GetById(20): {courses.GetById(20)}");

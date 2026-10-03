@@ -1,6 +1,6 @@
 namespace Generics;
 
-public class Course
+public class Course : IHasId
 {
     public Course(int id, string title, decimal price)
     {
