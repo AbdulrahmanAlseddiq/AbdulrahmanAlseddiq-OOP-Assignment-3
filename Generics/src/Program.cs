@@ -29,3 +29,13 @@ catch (InvalidOperationException ex)
 IReadOnlyCollection<Student> all = students.GetAll();
 // all.Add(...)   ← does not compile: IReadOnlyCollection<T> has no Add.
 Console.WriteLine($"Count via read-only view: {all.Count}");
+
+// Step 6 — generic extension methods on any IEnumerable<T>.
+var numbers = new List<Course>
+{
+    new(1, "A", 1m), new(2, "B", 2m), new(3, "C", 3m), new(4, "D", 4m), new(5, "E", 5m),
+};
+foreach (var c in numbers.Page(pageNumber: 3, pageSize: 2))
+    Console.WriteLine($"  page 3 (size 2): {c}");
+Console.WriteLine($"FindById(4): {numbers.FindById(4)}");
+Console.WriteLine($"ToIdDictionary()[5]: {numbers.ToIdDictionary()[5]}");
