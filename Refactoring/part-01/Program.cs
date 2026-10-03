@@ -5,9 +5,11 @@ var shipping = new ShippingCostCalculator(
     new AramexCarrier(),
     new FedExCarrier(),
     new DhlCarrier(),
+    new BostaCarrier(),   // new carrier (R5)
 ]);
 Console.WriteLine($"Aramex 2kg → {shipping.Calculate("Aramex", 2)}");
 Console.WriteLine($"FedEx 2kg  → {shipping.Calculate("FedEx", 2)}");
+Console.WriteLine($"Bosta 2kg  → {shipping.Calculate("Bosta", 2)}");
 Console.WriteLine();
 
 var processor = new OrderProcessor(
