@@ -8,11 +8,11 @@ public class Student
 
 public static class StudentCatalog
 {
-    public static List<Student> GetAllStudents()
+    // Lazy: each student is created only when the caller asks for the next one.
+    // If the caller stops after 3, the other 999,997 are never created.
+    public static IEnumerable<Student> GetAllStudents()
     {
-        var students = new List<Student>();
         for (var i = 1; i <= 1_000_000; i++)
-            students.Add(new Student { Id = i, Name = $"Student {i}" });
-        return students;
+            yield return new Student { Id = i, Name = $"Student {i}" };
     }
 }
