@@ -15,3 +15,17 @@ var courses = new Store<Course>();
 courses.Add(new Course(10, "C# Basics", 1500m));
 courses.Add(new Course(20, "OOP", 2000m));
 Console.WriteLine($"GetById(20): {courses.GetById(20)}");
+
+// Step 5 — fast and safe.
+try
+{
+    students.Add(new Student(2, "Duplicate Mona"));
+}
+catch (InvalidOperationException ex)
+{
+    Console.WriteLine($"Duplicate rejected: {ex.Message}");
+}
+
+IReadOnlyCollection<Student> all = students.GetAll();
+// all.Add(...)   ← does not compile: IReadOnlyCollection<T> has no Add.
+Console.WriteLine($"Count via read-only view: {all.Count}");
