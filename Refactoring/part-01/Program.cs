@@ -17,7 +17,10 @@ var processor = new OrderProcessor(
 processor.Process(1001, "customer@example.com");
 Console.WriteLine();
 
-new UrgentScheduledEmailNotification { SendAt = DateTime.Today.AddHours(18) }
+INotificationChannel email = new EmailChannel();
+INotificationChannel sms = new SmsChannel();
+
+new Notification(email) { IsUrgent = true, SendAt = DateTime.Today.AddHours(18) }
     .Send("customer@example.com", "Your order ships tomorrow");
-new UrgentSmsNotification()
+new Notification(sms) { IsUrgent = true }
     .Send("+201000000000", "OTP 4821");
