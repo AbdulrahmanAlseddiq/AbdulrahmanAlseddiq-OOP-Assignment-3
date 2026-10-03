@@ -1,41 +1,68 @@
 using Generics;
 
-// Step 4 — one generic store replaces StudentStore and CourseStore.
-var students = new Store<Student>();
-students.Add(new Student(1, "Ahmed"));
-students.Add(new Student(2, "Mona"));
+// ===== Step 7 — prove it =====
 
-Console.WriteLine($"GetById(2): {students.GetById(2)}");
-Console.WriteLine($"GetById(9): {students.GetById(9)?.ToString() ?? "null"}");
-Console.WriteLine($"Remove(1): {students.Remove(1)}");
-foreach (var s in students.GetAll())
-    Console.WriteLine($"  {s}");
+// 5 students in a Store<Student>, 3 courses in a Store<Course>.
+var students = new Store<Student>();
+students.Add(new Student(1, "Ahmed Ali"));
+students.Add(new Student(2, "Mona Hassan"));
+students.Add(new Student(3, "Omar Khaled"));
+students.Add(new Student(4, "Sara Youssef"));
+students.Add(new Student(5, "Youssef Adel"));
 
 var courses = new Store<Course>();
-courses.Add(new Course(10, "C# Basics", 1500m));
-courses.Add(new Course(20, "OOP", 2000m));
-Console.WriteLine($"GetById(20): {courses.GetById(20)}");
+courses.Add(new Course(101, "C# Fundamentals", 1500m));
+courses.Add(new Course(102, "OOP in .NET", 2000m));
+courses.Add(new Course(103, "Generics & Collections", 1800m));
 
-// Step 5 — fast and safe.
+Console.WriteLine("=== Get one of each by id ===");
+Console.WriteLine($"students.GetById(3)   -> {students.GetById(3)}");
+Console.WriteLine($"courses.GetById(102)  -> {courses.GetById(102)}");
+Console.WriteLine($"students.GetById(99)  -> {students.GetById(99)?.ToString() ?? "null"}");
+Console.WriteLine();
+
+Console.WriteLine("=== Add a student with an id that already exists ===");
 try
 {
-    students.Add(new Student(2, "Duplicate Mona"));
+    students.Add(new Student(2, "Another Mona"));
+    Console.WriteLine("ERROR: the duplicate was accepted!");
 }
 catch (InvalidOperationException ex)
 {
-    Console.WriteLine($"Duplicate rejected: {ex.Message}");
+    Console.WriteLine($"Caught: {ex.Message}");
 }
+Console.WriteLine($"Still {students.Count} students; id 2 is still {students.GetById(2)}");
+Console.WriteLine();
 
-IReadOnlyCollection<Student> all = students.GetAll();
-// all.Add(...)   ← does not compile: IReadOnlyCollection<T> has no Add.
-Console.WriteLine($"Count via read-only view: {all.Count}");
+Console.WriteLine("=== Page 2 (size 2) of the students ===");
+foreach (var student in students.GetAll().Page(pageNumber: 2, pageSize: 2))
+    Console.WriteLine($"  {student}");
+Console.WriteLine();
 
-// Step 6 — generic extension methods on any IEnumerable<T>.
-var numbers = new List<Course>
+Console.WriteLine("=== Invalid page numbers throw ===");
+try
 {
-    new(1, "A", 1m), new(2, "B", 2m), new(3, "C", 3m), new(4, "D", 4m), new(5, "E", 5m),
+    students.GetAll().Page(pageNumber: 0, pageSize: 2);
+}
+catch (ArgumentOutOfRangeException ex)
+{
+    Console.WriteLine($"Caught: {ex.Message}");
+}
+Console.WriteLine();
+
+Console.WriteLine("=== FindById on a plain List<Course> (not a Store) ===");
+var courseList = new List<Course>
+{
+    new(201, "SQL Server", 1200m),
+    new(202, "ASP.NET Core", 2500m),
+    new(203, "Design Patterns", 1700m),
 };
-foreach (var c in numbers.Page(pageNumber: 3, pageSize: 2))
-    Console.WriteLine($"  page 3 (size 2): {c}");
-Console.WriteLine($"FindById(4): {numbers.FindById(4)}");
-Console.WriteLine($"ToIdDictionary()[5]: {numbers.ToIdDictionary()[5]}");
+Console.WriteLine($"courseList.FindById(202) -> {courseList.FindById(202)}");
+Console.WriteLine($"courseList.FindById(999) -> {courseList.FindById(999)?.ToString() ?? "null"}");
+Console.WriteLine();
+
+Console.WriteLine("=== ToIdDictionary ===");
+IReadOnlyDictionary<int, Course> byId = courseList.ToIdDictionary();
+Console.WriteLine($"byId[203] -> {byId[203]}   (Count = {byId.Count})");
+
+// var words = new Store<string>();   // must NOT compile — string does not implement IHasId (error CS0311). See Answers.md (Step 7).
