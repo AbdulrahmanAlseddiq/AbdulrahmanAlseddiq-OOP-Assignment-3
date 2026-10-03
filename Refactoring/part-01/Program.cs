@@ -1,6 +1,11 @@
-﻿using RefactoringLab;
+using RefactoringLab;
 
-var shipping = new ShippingCostCalculator();
+var shipping = new ShippingCostCalculator(
+[
+    new AramexCarrier(),
+    new FedExCarrier(),
+    new DhlCarrier(),
+]);
 Console.WriteLine($"Aramex 2kg → {shipping.Calculate("Aramex", 2)}");
 Console.WriteLine($"FedEx 2kg  → {shipping.Calculate("FedEx", 2)}");
 Console.WriteLine();
